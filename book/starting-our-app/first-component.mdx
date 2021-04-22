@@ -1,0 +1,119 @@
+---
+sidebar_position: 3
+---
+
+# Our first React Component
+
+During our [project structure overview](./project-structure.md), We just saw where our React app will be mounted. There is a `div` with an id `root` that will serve as main container for our app. Lets look into `src/index.js` and see what is going on there.
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+
+ReactDOM.render(<App />, document.getElementById('root'));
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
+```
+
+Lets break it down:
+
+- **A bunch of imports**: At the top of the file, we are importing our dependencies (React itself), our custom CSS, our custom `App` component and a service worker. [Service Workers](https://developers.google.com/web/fundamentals/primers/service-workers) are beyond the scope of this book and we won't use them while building **Reactgram**. Maybe I can write about it in a future update.
+- **ReactDOM.render**: [ReactDOM](https://reactjs.org/docs/react-dom.html) allows us to access the DOM directly. As you will see soon enough, the way we build React applications is quite different from, let's say, using pure javascript or libraries like jQuery, where we have to manipulate DOM nodes and manually keep them up2date. in React, the DOM elements will get updated automatically based on state changes. The `ReactDOM.render` method takes two parameters: A React component, in this case `<App />`, and a DOM element, which will be our application container. Notice that we are using `document.getElementById` which is a native browser API for fetching DOM nodes. And that is pretty much the only time we have to deal with it in our app. From now on, we will deal with our React components.
+
+The `index.js` is our `main` function for our React app. This is the starting point of our application. Our main component, in this case called `App`, will be mounted into the DOM tree and from now on, The `App` component will take cake of the rest.  
+Notice that our CSS is also imported here. This is also a neat feature of `create-react-app`. At build time, it will make sure to import all the CSS files, compress and minified them, and inject into our `index.html` page. This is highly optimized by default.
+  
+## The JSX Syntax
+
+Now lets take a look at `src/App.js`:
+
+```jsx title="/src/App.js"
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+HTML inside of our Javascript file? That doesn't feel right...  
+Ok, it might look weird if you are coming from traditional web development and that is totally fine. The React team took a different route to build templates. They call it [JSX Syntax](https://reactjs.org/docs/introducing-jsx.html). It is a javascript syntax extension that allows us to compose HTML templates with the direct power of Javascript. It allows us to manipulate our UI much more efficiently since we don't have to try to find specific nodes on the DOM tree via ids or CSS classes.  
+  
+Lets take a moment to reason about a few other things:
+
+- our `App` component is just a normal javascript function. There is nothing special about it. This is no different from the javascript code we are used to write everyday.
+- The `return` value of our function is basically HTML. There are a few different things there.
+  - It uses `className` instead of `class` for our CSS classes. This is due to the javascript API. if you are manipulating DOM elements the traditional way, the attribute `className` is available for you there. Also, `class` is a keyword in javascript.
+  - the `src` attribute of our `img` tag uses `{}` instead of normal double quotation marks. This is part of the JSX syntax that enables us to inject our javascript code there. `src={logo}` will inject the logo URL which is just a javascript string.
+- the `export default App`: This is how we export our component to be used by another file. Our `App` component ends up being just a javascript module. [You can read more about that here.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+
+## Creating our First Component
+
+The `App` component is pretty cool, but lets create something custom. How about a hello world component?  
+Just before `export default App` lets add the following function:
+
+```jsx title="/src/App.js"
+// ... our App component is above here
+function HelloWorld() {
+  return(
+    <div>
+      <h1>Hello, world!</h1>
+    </div>
+  );
+}
+```
+
+Now, lets replace our `App` component with this:
+
+```jsx title="/src/App.js"
+// ... keep all the imports here
+function App() {
+  return (
+    <div className="App">
+      <HelloWorld/>
+    </div>
+  );
+}
+
+export default App;
+```
+
+See that our component `HelloWorld` was used as a HTML tag? That is JSX syntax again helping us. This is really mind-blowing 🤯.  
+We have a plain javascript function called `HelloWorld` and thanks to JSX, it is translated to a normal HTML tag where we can fit into any other React component, just like we are doing inside our `App` component.
+
+If you still have your console running our development command `yarn start`, go to your browser and open `localhost:3000` to see the result. You should see something like this:
+
+
+Notice that you didn't have to reload your browser to see the changes. This is a neat feature you get out-of-the-box when using `create-react-app`. It is called [Hot Module Replacement](https://webpack.js.org/guides/hot-module-replacement/) from webpack that is already configured by default. It updates the browser javascript code as soon as you hit save, keeping your page fresh with your code.
+
+Now lets talk about **props** and how communication works between components.
+
+## Code changes we have made so far
+
+Here is the [Github link](https://github.com/brunojppb/reactgram-web/commit/46e03b893bd80722e878918a6c24af63ede70571) to the commit of the changes we have made so far.
