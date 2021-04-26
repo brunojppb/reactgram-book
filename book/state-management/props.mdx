@@ -1,0 +1,168 @@
+---
+sidebar_position: 3
+---
+
+# Props
+
+Just like we add the `src` property to an `img` tag, we can do the 
+same with our custom React component. This is called `Props` in React 
+and you can have your own custom ones. By default, if you add any property 
+to a component, it will be the first parameter of the function, 
+conventionally called `props`. It is an object that wraps all the custom 
+properties you pass into your component. React incapsulates that in your 
+function and let you handle that just like any other javascript function call.  
+  
+Lets change our `App` and `HelloWorld`components again, including the 
+`props` argument and see what happens then.
+
+```jsx title="./src/App.js"
+// ... keep the imports here
+function App() {
+  return (
+    <div className="App">
+      <HelloWorld firstName="Jill" />
+    </div>
+  );
+}
+
+function HelloWorld(props) {
+  return(
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>My first name is {props.firstName}</h2>
+    </div>
+  );
+}
+```
+
+We just added a prop called `firstName`. Now lets go to our browser 
+and see what happens:
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+
+```mdx-code-block
+
+export function App() {
+  return (
+    <div className="App">
+      <HelloWorld firstName="Jill" />
+    </div>
+  );
+}
+
+export function HelloWorld(props) {
+  return(
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>My first name is {props.firstName}</h2>
+    </div>
+  );
+}
+
+<BrowserWindow minHeight={240}>
+  <App/>
+</BrowserWindow>
+
+```
+<br/>
+
+Lets break it down:
+
+- Our `HelloWorld` component now accepts a new property called `firstName` 
+and this prop is a string. Notice that we used double quotation marks 
+instead of curly brackets. This is due to the fact that you only need 
+curly brackets if you want to inject javascript code, otherwise you 
+can use the properties just like any normal HTML tag attribute.
+
+- Inside our `HelloWorld` function, you see now the parameter called `props`.
+With the props object, we have access to all the properties passed down from 
+the parent component, in this case `App`.
+
+## Inspecting the DOM
+
+We created our React components and somehow it got rendered as valid HTML.
+Lets open the browser inspector and see how our HTML looks like:
+
+![Props browser inspector](/img/state-management/props-browser-inspector.png)
+
+Notice that our components were rendered as HTML elements. you don't see a 
+`<HelloWorld>` HTML tag there. The browser doesn't understand that. 
+React abstracts away this complexity and creates the real DOM elements for us.
+
+If we look closer, we can also see that the property `className="App"` 
+was rendered as `class="App"`. This is also React doing its magic for us. 
+Translating the javascript DOM API automatically to HTML attributes.
+  
+## Props and javascript expressions
+
+Instead of just string literals like `firstName="Jill"`, we can also pass 
+javascript expressions to component props. Lets try our passing an user 
+object to `HelloWorld`:
+
+```jsx
+function App() {
+
+  const user = {
+    firstName: 'Jill',
+    lastName: 'Koh'
+  };
+
+  return (
+    <div className="App">
+      <HelloWorld user={user} />
+    </div>
+  );
+}
+
+function HelloWorld(props) {
+  const {firstName, lastName} = props.user;
+  return(
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>My name is {`${firstName} ${lastName}`}</h2>
+    </div>
+  );
+}
+```
+
+You should be able to see the full user name on your browser:
+
+```mdx-code-block
+
+export function HelloUserWorld(props) {
+  const {firstName, lastName} = props.user;
+  return(
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>My name is {`${firstName} ${lastName}`}</h2>
+    </div>
+  );
+}
+
+<BrowserWindow minHeight={240}>
+  <HelloUserWorld user={{firstName: 'Jill', lastName: 'Koh'}} />
+</BrowserWindow>
+```
+
+<br/>
+
+There are three main differences in this snippet of code we should pay
+attention to:
+
+1. `HelloWorld` component now accepts a `user` prop which is an object.
+2. Inside `HelloWorld` we use the destructuring assignment syntax 
+to unpack the user first and last name. You can read more about 
+[destructuring assignment here.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+3. Inside our `h2` we use the JSX syntax to write plain javascript code 
+inside the curly braces.
+
+With the example above, we can see that JSX is really powerful. It allows us 
+to pass all kind of things down to our component three. It can be a string literal, 
+an javascript object, an boolean, functions or even other React components.
+
+In the next part we will see a bit more about props, but we will also dig a 
+bit deeper into component state and how they play so nicely together.
+
+## File changes we made so far
+
+Here is the [Github link](https://github.com/brunojppb/reactgram-web/commit/d0441acc11e83f1a2cc3b1fa6282cb5d5ea1b95f) to the commit of the changes we have made so far.

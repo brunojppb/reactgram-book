@@ -1,0 +1,55 @@
+---
+sidebar_position: 1
+---
+
+# The Never-ending problem of managing state
+
+When you are building software, and I mean really any kind of software,
+doesn't matter if it is a mobile app, native mac app or web app,
+you have to deal with state management.
+
+Things like keeping tracking if that little button was pressed, if that
+ingredients list has all the right ingredients, if that timer is updating
+the screen correctly every 5 seconds and this kind of stuff. And to keep
+track of that, we usually come up with various ways to update the state and
+keep track of its changes.
+
+## React does it right
+
+State management was the killer feature that drew my attention to React and
+I believe that React does it right. The way it approaches state management
+takes the following principle:
+
+:::note State Management principle
+
+Make your UI declarative and it will be kept updated by reacting
+to state changes automatically.
+
+:::
+
+This notion might not make sense yet if you are not used it, but bear with me,
+we will see examples of it and how incredible it feels to manage state in React.
+
+I'm not here to say that React is the Holy Grail of state management, no there
+are plenty of other libraries out there that do a decent job. Actually sometimes
+you need a more complex state management library to help you with that, and that
+can absolutely be used with React. [Redux](https://redux.js.org/) for example
+is an excellent alternative.
+
+But again, React itself is most probably more than enough for the apps you will
+build.
+
+## The built-in APIs are enough
+
+Another strong point of React is that it provides native state management APIs
+by default. You don't need an extra npm package or craft your own solution.
+
+By composing components and sharing state between them, you will notice that
+React owns APIs are more than enough for most apps, from small projects to
+large codebases.
+
+## Battle-tested developer tools
+
+Another strong point from React is its developer tools. If you don't have that
+installed yet, just go ahead and install it [from here.](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+We will demonstrate how to use this extension in the following chapters.

@@ -1,0 +1,53 @@
+---
+sidebar_position: 2
+---
+
+# The fundamental concepts
+
+Along this book, you will notice that we will be either repeating or
+building on top of what we lean during the beginning of this book,
+and that is by design.
+
+The basic building blocks we need to build web apps with React are
+remarkably simple. There are only three of them:
+
+1. Components
+2. Props
+3. State
+
+Will be exploring each one of them individually, but you have got a
+taste of the first one in the previous chapters.
+
+## Props
+
+This concept is similar to HTML attributes. Lets say you have an 
+`img` being rendered on the profile page of your app. This
+`img` tag needs the `src` attribute so it can load the profile image.
+
+Props work in a very similar fashion, the only difference is that
+they are **immutable**, which means that when they once they are set,
+they can't be modified. You might think that this isn't very useful
+and I would agree with you. But React has an interesting way of
+letting you update them by rendering a completely new version of your
+component whenever you want to change props. We will see many examples
+of props in practice along this book.
+
+## State
+
+While props are immutable, state was made to change over time. The
+fundamental difference here is that you never mutate state objects
+in React, but you pass in a new version of it whenever you need to
+change it. We usually apply transformations on top of existing state
+and generate a new version of it with what we need.
+
+Think about a list of ingredients. Lets say you want to add a new
+ingredient to this list. If you are using an `Array`, you would probably
+say "Let's use `Array.push` to the new ingredient", but in React you
+instead have to create a new array by combining the previous ingredients
+with the newly added ingredient. That sounds like a lot of more work,
+but the benefits that come with it will pay off.
+
+## State and props in practice
+
+Now that we introduced the basic building blocks of React, let's move
+on and see how they work alongside each other.
