@@ -6,7 +6,7 @@ sidebar_position: 3
 
 During our [project structure overview](./project-structure.md), We just saw where our React app will be mounted. There is a `div` with an id `root` that will serve as main container for our app. Lets look into `src/index.js` and see what is going on there.
 
-```jsx
+```jsx title="/src/index.js"
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -104,6 +104,34 @@ function App() {
 export default App;
 ```
 
+Now go and checkout your browser. You should something like bellow:
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+
+```mdx-code-block
+
+export function HelloWorld() {
+  return(
+    <div>
+      <h1>Hello, world!</h1>
+    </div>
+  );
+}
+
+export function App () {
+  return (
+    <div className="App">
+      <HelloWorld/>
+    </div>
+  );
+}
+
+<BrowserWindow minHeight={240}>
+  <App/>
+</BrowserWindow>
+```
+<br/>
+
 See that our component `HelloWorld` was used as a HTML tag? That is JSX syntax again helping us. This is really mind-blowing 🤯.  
 We have a plain javascript function called `HelloWorld` and thanks to JSX, it is translated to a normal HTML tag where we can fit into any other React component, just like we are doing inside our `App` component.
 
@@ -114,6 +142,6 @@ Notice that you didn't have to reload your browser to see the changes. This is a
 
 Now lets talk about **props** and how communication works between components.
 
-## Code changes we have made so far
+## Code changes we made so far
 
 Here is the [Github link](https://github.com/brunojppb/reactgram-web/commit/46e03b893bd80722e878918a6c24af63ede70571) to the commit of the changes we have made so far.
