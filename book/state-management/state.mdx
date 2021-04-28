@@ -1,0 +1,264 @@
+---
+sidebar_position: 4
+---
+
+# State
+
+With a good glimpse of how `props` work, what about state management? 
+What does that even mean? Let's take a step back and understand what state is.
+
+Let's say we need to develop an app that has a single button. 
+This app must keep track of how many times the button has been 
+clicked and show it on the screen.
+
+We can call it __Counter App__. Let's go to our `hello-react` project and 
+change our `src/App.js` file again with the following code:
+
+```jsx title="./src/App.js"
+import React from 'react';
+import './App.css';
+
+function App() {
+  const count = 0;
+  return (
+    <div className="App">
+      <h2>Current Count: {count}</h2>
+      <button>Increment Counter</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+If we open our browser, we should be able to see this:
+
+import BrowserWindow from '@site/src/components/BrowserWindow';
+
+```mdx-code-block
+
+export function CounterApp1() {
+  const count = 0;
+  return (
+    <div className="App">
+      <h2>Current Count: {count}</h2>
+      <button>Increment Counter</button>
+    </div>
+  );
+}
+
+<BrowserWindow>
+  <CounterApp1 />
+</BrowserWindow>
+
+```
+
+If you click on the button, nothing will change. You might think:
+_"Of course nothing changed, we need an event handler to listen for 
+the button clicks"_. So let's hook up an event handler into our button.
+
+```jsx title="./src/App.js"
+import React from 'react';
+import './App.css';
+
+export function App() {
+  const count = 0;
+
+  const onButtonClick = (event) => {
+    console.log('button was clicked');
+  };
+
+  return (
+    <div className="App">
+      <h2>Current Count: {count}</h2>
+      <button onClick={onButtonClick}>Increment Counter</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+```mdx-code-block
+
+export function CounterApp2() {
+  const counter = 0;
+  const onButtonClick = (event) => {
+    console.log('button was clicked');
+  };
+  return (
+    <div className="App">
+      <h2>Current Count: {counter}</h2>
+      <button onClick={onButtonClick}>Increment Counter</button>
+    </div>
+  );
+}
+
+<BrowserWindow>
+  <CounterApp2 />
+</BrowserWindow>
+
+```
+
+The first thing we notice here is that React events are camelCase 
+instead of the default lowercase API. instead `onclick` we used `onClick`
+to pass our event handler function to the button. Now, if you open your 
+browser console, you should see the event handler getting fired for 
+every button click.
+
+
+Yet so far, nothing has changed in the UI. But lets get back to our original 
+question: How do I keep track of my counter? in other words, How can I 
+keep track of the __state__ of my counter? We have declared a variable
+called `count` within our component function body, but one thing we know
+about function scopes is that whenever this function gets called, the `count`
+variable is set again to `0`. How could we make that this variable can preserve
+the state between function calls, in the React Component-land that roughly means
+when a `render` cycle occurs.
+
+## hooks
+
+To solve this problem, React introduced a new concept called [hooks](https://reactjs.org/docs/hooks-intro.html).
+This approach allow us to, within our component function body, declare state variables
+and guarantee that they will be preserved between renders, unless we explicitly tell
+them to change.
+
+In this part of the book, we will see our fist hook in action. It's called `useState`.
+There are many other React hooks that we will explore later on, but `useState` is by far
+the most commonly used.
+Lets refactor our component a little and see how that works:
+
+```jsx
+import React, { useState } from 'react';
+import './App.css';
+
+export function App() {
+  const [count, setCount] = useState(0);
+
+  const onButtonClick = (event) => {
+    setCount(current => current + 1);
+  };
+
+  return (
+    <div className="App">
+      <h2>Current Count: {count}</h2>
+      <button onClick={onButtonClick}>Increment Counter</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Now try to click on the **Increment Counter** button and see what happens.
+
+```mdx-code-block
+
+
+export function Counter3() {
+  const [count, setCount] = React.useState(0);
+  const onButtonClick = (event) => {
+    setCount(current => current + 1);
+  };
+  return (
+    <div className="App">
+      <h2>Current Count: {count}</h2>
+      <button onClick={onButtonClick}>Increment Counter</button>
+    </div>
+  );
+}
+
+<BrowserWindow>
+  <Counter3/>
+</BrowserWindow>
+```
+
+:::note Interactive Examples
+
+This book is equipped with interactive examples like the one above.
+You will notice that in some cases we will be able to interact with
+the components we are writing along the book.
+
+:::
+
+Wait what? Our counter now is incrementing for every click and the UI 
+updates immediately? That is the magic of React hooks. Even though our 
+React component is a pure function, which means it doesn't mutate other 
+objects, it still manages to keep track of our `count` variable. 
+But how does that work? Let's take this code change we made a little further:
+
+```jsx {5}
+import React, { useState } from 'react';
+import './App.css';
+
+export function App() {
+  const [count, setCount] = useState(0);
+
+  const onButtonClick = (event) => {
+    setCount(current => current + 1);
+  };
+
+  return (
+    <div className="App">
+      <h2>Current Count: {count}</h2>
+      <button onClick={onButtonClick}>Increment Counter</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In the line highlighted above, we are using the [destructuring assignment syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) 
+to unpack two variables that come inside of the array returned by the `useState` 
+function call. The first variable, `count` is the value we want to keep track of. 
+It can be a number, a string, an object and any other data type we want. 
+The second variable, in this case we called `setCount`, is the mutation function 
+that allows us to update the state. We also pass a parameter to the `useState` call 
+which is the initial state, in this case the number `0`. Now let's have a look at 
+our event handler:
+
+```jsx {7-9}
+import React, { useState } from 'react';
+import './App.css';
+
+export function App() {
+  const [count, setCount] = useState(0);
+
+  const onButtonClick = (event) => {
+    setCount(current => current + 1);
+  };
+
+  return (
+    <div className="App">
+      <h2>Current Count: {count}</h2>
+      <button onClick={onButtonClick}>Increment Counter</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+We can ignore the `event` object for now. Let's focus on the `setCount` function 
+call. It receives a function as a callback that takes one parameter, the current 
+state value that is passed in by React when this callback is called. This function 
+we just passed as a callback also has to return something, which is the next 
+desirable state. In our case, we just return the sum of the `current` value with 1 
+to increment it. We are also using arrow functions to keep the code more lean.
+You can [read a bit more about arrow functions here.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)  
+
+This is how React knows that the state has changed, and whenever it happens, it needs 
+to update the UI. That is why you see the counter incrementing on the screen instantly.  
+This is called [Reconciliation](https://reactjs.org/docs/reconciliation.html), which 
+is an implementation of a diffing algorithm that figures out what has changed 
+and updates only the necessary parts of the DOM tree.
+  
+That is how state works in React apps. The app we have built here might look very 
+simplistic, but is enough to show you how simple state management can be in React.
+We will see more examples in the next part, but that is enough to show you that 
+State and Props are the building blocks of React apps.
+
+## Changes we made so far
+
+Here is the [Github link](https://github.com/brunojppb/reactgram-web/commit/63f2f7877efde71650b8f6b8a8b1789f31d5c332) to the commit of the changes we have made so far.

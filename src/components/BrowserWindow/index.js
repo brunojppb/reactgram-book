@@ -9,7 +9,7 @@ import React from 'react';
 
 import styles from './styles.module.css';
 
-export default function BrowserWindow({children, minHeight, url = 'localhost:3000'}) {
+export default function BrowserWindow({children, minHeight = 240, url = 'localhost:3000'}) {
   return (
     <div className={styles.browserWindow} style={{minHeight}}>
       <div className={styles.browserWindowHeader}>
