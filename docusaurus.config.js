@@ -18,6 +18,9 @@ module.exports = {
     twitter: true,
     twitterUsername: 'bpaulino0',
     twitterImage: 'img/reactgram.jpg',
+    prism: {
+      theme: require('prism-react-renderer/themes/oceanicNext'),
+    },
     navbar: {
       title: 'Reactgram',
       hideOnScroll: true,

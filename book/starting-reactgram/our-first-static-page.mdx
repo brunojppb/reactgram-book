@@ -1,0 +1,161 @@
+---
+sidebar_position: 1
+---
+
+# Our first static page
+
+Now that we have seen the building blocks of React, lets start building reactgram,
+the app which give this book its title. You might ask yourself _"Is it really just 
+Props and State all I need to know to build React apps?"_. Actually, most of it is 
+directly connected with Props and State, although there is still a ton of things to 
+learn in order to proper build React apps.But fear not, you will learn it as we apply 
+the concepts while building reactgram.
+
+We will start by creating the about page of Reactgram. This page is fairly static. It
+contains some text and a link to the homepage. We will also using the same app template
+we have been using from our previous chapters. We initially called it `hello-react`.
+Feel free to rename the folder to `reactgram`, but that isn't required.
+
+## Creating the about page
+
+Let's restructure our app folder a little more. inside the `src` folder, create a new 
+folder called `components`.
+
+Now inside the `components` folder, create a new folder called `static`. This folder is 
+meant for our static pages where each page is represented by a component. Now, inside 
+the static folder, create a new file called `AboutPage.js` and lets add the following code:
+
+```jsx title="/src/static/AboutPage.js"
+import React from 'react';
+
+function AboutPage() {
+
+  return(
+    <div>
+      <h1>About Page</h1>
+      <p>
+        React is the most popular frontend library on the market. Built by Facebook, 
+        it is based on functional components which are updated automatically when a state 
+        update occurs. 
+        Designed around a declarative architecture, components created in React are much 
+        easier to build, debug and maintain.
+      </p>
+    </div>
+  );
+
+}
+
+export default AboutPage;
+```
+
+## Navigating through pages in a SPA
+
+We now have our first static page represented as a component. But a [few sections back](./hello-world/project-structure.md),
+we briefly mentioned that a React app contains only one page, which is an `index.html` file.
+With that in mind, how can we think about having multiple pages on a single-page application?
+
+The secret of having pages in a single-page application relies in the [History API,](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+which let us manipulate the URL we see in the browser and also the history stack, which allows
+us to navigate back and forth without reloading the page. Implementing this behavior 
+properly is quite a challenge, but thankfully the folks from [React Training](https://reacttraining.com/)
+created the most popular library to manage routes. This library is called [React Router.](https://reactrouter.com/)
+We will be using this library to help us structure our app pages.
+
+## Starting with routes
+
+To be able to guide the user through pages on our website, we need to tell the browser 
+how to switch between routes. We start at `/` as the home page, but then when we click on a 
+link pointing to `/about` you need to render a new page.
+
+In classic server-side rendering apps, the link click triggers a request to the server, 
+the server replies with a brand new page and then the browser renders it, replacing the 
+previous page. When using React apps, we don't need this roundtrip. React apps are 
+Single-page Applications, which means that all the pages are already there, we just need 
+a way to switch routes without reloading the browser, but at the same time, keeping the URL 
+in sync with the current page so your apps can still support links, just like any other 
+website.
+
+React doesn't include a routing mechanism, so we either have to implement it from scratch 
+or use a library that does it for us. In our case, we will be using **React Router**. 
+This library works exceptionally well for our use case. While implementing it, 
+I will explain what each component of this library can help us with.
+
+Lets install React Router in our app. Go to your terminal, stop the app and execute the 
+following command:
+
+```shell
+yarn add react-router-dom
+```
+
+With React Router installed, start you app again with `yarn start`, go back to our 
+`App.js` component and refactor it with the following code:
+
+```jsx
+import React from 'react';
+import './App.css';
+import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
+import AboutPage from './components/static/AboutPage';
+
+function App() {
+
+  return (
+    <div className="App">
+      <h1>Reactgram</h1>
+      <Router>
+        <Link to="/about">About</Link>
+        <Switch>
+          <Route path="/about">
+            <AboutPage/>
+          </Route>
+        </Switch>
+      </Router>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Now head back to your browser. You should see a link to the about page. 
+if you click on it, you will notice that the header **Reactgram** still appears, 
+but underneath it, the `<AboutPage/>` component immediately shows up. 
+This is the magic React Router does for us. Let's take a step back to understand
+what is going on here:
+
+* The `<Router>` component: The original component name is actually __BrowserRouter__, 
+but we just renamed it during the import statement for the sake of shorter names. 
+The Router component must come somewhere at the top of our component tree. You will
+understand why this component must be at the top of our component tree in the following
+chapters. The most important thing to understand now is that its main responsibility 
+is to control the URL behavior.
+
+* The `<Link>` component: the classic `<a>` HTML tag is replaced by Link here for 
+the sole reason that it will prevent the browser reloading the page and allows React 
+Router to render the right component based on the URL path. It still renders an __a__ 
+tag behind the curtains.
+
+* The `<Switch>` component: It acts literally as context switcher. It requires `<Route>` 
+components with a `to` prop as its children. It looks each Route component from top to 
+bottom and check if the current URL in the path matches them. Once it finds the correct 
+URL match, it will render the component specified by the `<Route>` component.
+
+* The `<Route>` component: It acts as an auxiliary component for the Switch component 
+we mentioned above, acting similarly as a __case__ clause in a JavaScript *__switch__* 
+statement.
+  
+This is how it should look like on your browser:
+
+![About page](/img/starting-reactgram/about-page-route.gif)
+
+We now have the about page created. We also got a little glimpse on how routes are handled 
+in our app. One thing you notice is that you will see this pattern over and over across 
+the book.
+
+Our new static page looks okay, but it's still missing styles. In the next section, 
+we will add CSS and refactor it a bit to include a common component across all pages:
+The footer of our website.
+
+## File changes we made so far
+
+Here is the [Github link](https://github.com/brunojppb/reactgram-web/commit/14df7cce244a1cdccba5d1009cd2072c49f012f6)
+to the commit of the changes we have made so far.
