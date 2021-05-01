@@ -8,7 +8,7 @@ In this chapter, we will create a very simple React app just to show you around 
 
 ## Creating a React project
 
-assuming you have [all the dependencies installed](./what-do-we-need-to-start.md), lets go ahead to our terminal and create our first React app:
+assuming you have [all the dependencies installed](./setup/what-we-need-to-start.md), lets go ahead to our terminal and create our first React app:
 
 ```shell
 # This command will tell NPM to download the create-react-app
