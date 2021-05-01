@@ -10,6 +10,9 @@ module.exports = {
   organizationName: 'brunojppb', // Usually your GitHub org/user name.
   projectName: 'Reactgram', // Usually your repo name.
   themeConfig: {
+    colorMode: {
+      respectPrefersColorScheme: true,
+    },
     navbar: {
       title: 'Reactgram',
       hideOnScroll: true,
