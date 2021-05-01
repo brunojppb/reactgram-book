@@ -13,11 +13,11 @@ module.exports = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
-    image: 'img/reactgram_cover.jpg',
-    ogImage: 'img/reactgram_cover.jpg',
+    image: 'img/reactgram.jpg',
+    ogImage: 'img/reactgram.jpg',
     twitter: true,
     twitterUsername: 'bpaulino0',
-    twitterImage: 'img/reactgram_cover.jpg',
+    twitterImage: 'img/reactgram.jpg',
     navbar: {
       title: 'Reactgram',
       hideOnScroll: true,
