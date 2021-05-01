@@ -2,7 +2,7 @@
 module.exports = {
   title: 'Reactgram',
   tagline: 'Learn React by building an instagram clone from scratch',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://reactgram.dev',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -12,6 +12,7 @@ module.exports = {
   themeConfig: {
     navbar: {
       title: 'Reactgram',
+      hideOnScroll: true,
       logo: {
         alt: 'Reactgram',
         src: 'img/reactgram-logo.svg',
@@ -56,7 +57,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+            'https://github.com/brunojppb/reactgram-book/edit/main/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

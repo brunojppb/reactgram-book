@@ -92,7 +92,10 @@ function HelloWorld() {
 Now, lets replace our `App` component with this:
 
 ```jsx title="/src/App.js"
-// ... keep all the imports here
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
+
 function App() {
   return (
     <div className="App">
