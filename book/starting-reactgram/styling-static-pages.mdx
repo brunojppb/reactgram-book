@@ -1,0 +1,206 @@
+---
+sidebar_position: 2
+---
+
+# Styling static pages
+
+We have our first static page, but it's fairly basic. Would be really cool
+to add some styles to it.
+
+If you look at our `App` component, you will notice two things about CSS:
+
+* The `App.css` import statement
+* Using the `className` prop on the `App` component
+
+:::note className instead of class
+
+The reason for using `className` in React instead of `class` is due to the native
+way we handle the DOM API. when manipulating the DOM via JavaScript, you don't
+use `class`, but `className`. Besides, `class` is a protected keyword in
+JavaScript which is meant to create JavaScript classes.
+
+:::
+
+```jsx title="./src/App.js" jsx {2,9}
+import React from 'react';
+import './App.css';
+import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
+import AboutPage from './components/static/AboutPage';
+
+function App() {
+
+  return (
+    <div className="App">
+      <h1>Reactgram</h1>
+      <Router>
+        <Link to="/about">About</Link>
+        <Switch>
+          <Route path="/about">
+            <AboutPage/>
+          </Route>
+        </Switch>
+      </Router>
+    </div>
+  );
+}
+
+export default App;
+```
+
+The way a `create-react-app` works by default is to allow us to import
+CSS files directly into our component files. During the app bundling, which
+is the process of collecting all files, transform them in the right order
+and generate a final production-ready bundle to be deployed. This is a super
+valid approach to write CSS for your React apps, but there is a new trendy way
+of keep your CSS even more closer to your component. It's called [__CSS-in-js__](https://reactjs.org/docs/faq-styling.html#what-is-css-in-js),
+and we will be taking this approach here.
+
+The way CSS-in-js works is that instead of writing individual CSS files and keep
+them out of range from our component, we can actually write CSS directly into our
+JavaScript file, keeping style and component both very close together. This method
+allows us to go a step further, enabling us to perform conditional styling based on
+our component state. We will see that in practice along the book.
+
+## Using styled-components
+
+The library we are going to use to accomplish CSS-in-js is called [styled-components](https://styled-components.com/)
+Let's go ahead and install it with the following command:
+
+```shell
+yarn add styled-components
+```
+
+:::caution Important
+Whenever we install a new dependency, we must restart our dev server.
+To perform a restart, press `ctrl+c` to stop it and enter `yarn start` to start it again.
+:::
+
+## Removing existing CSS files
+
+Since we will be writing our CSS inside our JavaScript files, we don't need CSS files
+anymore. So just go ahead and delete `./src/App.css` and `./src/index.css`. Notice that 
+the app will start working. It's because those files we just deleted are being imported 
+by some of our JavaScript files, so lets remove those imports.
+
+* Remove the `import './App.css';` line from `./src/App.js`
+* Remove the `className="App"` from the `App` component
+* Remove the `import './index.css';` line from `./src/index.js`
+
+Once you remove those lines and save the files, your app should work again, although the
+styles will be the defaults from the browser now since we are not applying any at the moment.
+
+## Creating a layout component
+
+Now create a file called `StaticLayout.js` inside of `./src/components/static` with the
+following code:
+
+```jsx title="./src/static/StaticLayout.js"
+import styled from 'styled-components'
+
+const StaticLayout = styled.div`
+    display: grid;
+    grid-template-rows: 1fr;
+    gap: 16px;
+    padding: 16px;
+    justify-items: center;
+    margin: auto;
+    max-width: 935px;
+`;
+
+export {
+  StaticLayout
+};
+```
+
+Now we created a React component which isn't a normal JavaScript function anymore.
+What is going on here? This is what the `styled.div` function call is doing for us.
+It creates a React component with the CSS written inside the multiline string we passed
+to it. The `.div` function is creating a `div` element with all the CSS passed in,
+so whenever we use the `StaticLayout` component, it will wrap all other children 
+components and let you apply any CSS rule down the component tree.
+
+You don't have to worry about the details right now, just that if you need to render a
+styled `p` tag, you can use `styled.p` to created that for you. The same rule applies
+to `a`, `button` and every other HTML tag available to us.
+
+Now Let go to our `AboutPage.js` and use our new component we just created.
+
+```jsx title="./src/static/AboutPage.js" {2,7,15}
+import React from 'react';
+import { StaticLayout } from './StaticLayout';
+
+function AboutPage() {
+
+  return(
+    <StaticLayout>
+      <h1>About Page</h1>
+      <p>
+        React is the most popular frontend library on the market. Built by Facebook, 
+        it is based on functional components which are updated automatically when a 
+        state update occurs. Designed around a declarative architecture, components 
+        created in React are much easier to build, debug and maintain.
+      </p>
+    </StaticLayout>
+  )
+
+}
+
+export default AboutPage;
+```
+
+We imported our newly created `StaticLayout` component, removed the top level `div` and 
+wrapped our content with `StaticLayout`. Go ahead and check your browser, you should see
+something similar to this:
+
+![About page with styled-components](/img/starting-reactgram/about-page-styled-components.png)
+
+Now go ahead and use the developer tools from your browser to see what was really rendered
+in the DOM. You will notice that our About Page content was wrapped in a div with some random
+CSS classes.
+
+![About page with styled div](/img/starting-reactgram/about-page-styled-div.png)
+
+This is what `styled-component` is doing for us. The reason for having random CSS class names
+is actually by design. This is a feature to create scoped CSS which are applied to our
+components only, avoiding the CSS rules to be leaked outside of its boundaries.
+
+Notice that our CSS rules were applied successfully, although we didn't finish our styles
+yet. Lets make our page look nicer by editing the `StaticLayout` component once again.
+
+```jsx {13-17}
+import styled from 'styled-components'
+
+const StaticLayout = styled.div`
+    display: grid;
+    grid-template-rows: 1fr;
+    gap: 16px;
+    padding: 16px;
+    justify-items: center;
+    margin: auto;
+    max-width: 935px;
+    width: 100%;
+
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+      Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+`;
+
+export {
+  StaticLayout
+};
+```
+
+We added some system fonts to it so it will look nicer, but notice that the header
+`Reactgram`, just above our component doesn't change it's font at all. This is again
+due to the fact that styled-components scoped our CSS rules to `StaticLayout` and its
+children only.
+
+![About page with styled components scoped](/img/starting-reactgram/styled-components-scoped.png)
+
+But would be cool to have some global styling applied automatically isn't? Stuff like
+`font-family` and `font-size` is usually something you want to have configured in one
+single place and distributed down to other DOM elements.
+
+## Creating global styles with styled-components
