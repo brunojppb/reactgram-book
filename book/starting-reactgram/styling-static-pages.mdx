@@ -203,4 +203,117 @@ But would be cool to have some global styling applied automatically isn't? Stuff
 `font-family` and `font-size` is usually something you want to have configured in one
 single place and distributed down to other DOM elements.
 
-## Creating global styles with styled-components
+## Creating global styles
+
+Thankfully, styled-components provides us a way to create global styles. Think about them
+as CSS code that is available to all components, no matter their class names. In this case
+specifically, we will be using the `createGlobalStyles` helper.
+
+Lets start by creating a file called `GlobalStyles.js` under `./src/components` with the
+following content:
+
+```jsx title="./src/components/GlobalStyles.js"
+import { createGlobalStyle } from "styled-components"
+
+export const GlobalStyle = createGlobalStyle`
+  #root,
+  body,
+  html {
+    min-height: 100vh;
+  }
+
+  html {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+      Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+    margin: 0;
+  }
+`
+```
+Notice that within the `createGlobalStyle` call, we specify which selectors we want
+to target. More specifically the html and body tags, including some CSS reset for
+other elements.
+
+Now lets head back to `./src/components/static/StaticLayout.js` and lets remove some of
+the CSS we wrote there. Here is how `StaticLayout.js` should look like:
+
+```jsx title="./src/components/static/StaticLayout.js"
+import styled from 'styled-components'
+
+export const StaticLayout = styled.div`
+    display: grid;
+    grid-template-rows: 1fr;
+    gap: 16px;
+    padding: 16px;
+    justify-items: center;
+    margin: auto;
+    max-width: 935px;
+    width: 100%;
+`;
+```
+
+Now that we have some global styles and a specific file to keep it there, lets refactor
+our `App.js` file to include our newly created component:
+
+```jsx title="./src/App.js"
+import React from 'react';
+import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
+import { GlobalStyle } from './components/GlobalStyles';
+import AboutPage from './components/static/AboutPage';
+
+function App() {
+
+  return (
+    <>
+      <GlobalStyle/>
+      <h1>Reactgram</h1>
+      <Router>
+        <Link to="/about">About</Link>
+        <Switch>
+          <Route path="/about">
+            <AboutPage/>
+          </Route>
+        </Switch>
+      </Router>
+    </>
+  );
+}
+
+export default App;
+```
+
+Notice the use of `<></>` wrapping all other components. This is called a [Fragment](https://reactjs.org/docs/fragments.html)
+and needs to be used in cases where we need to return more then one child element
+as our root node. In this case, we are returning `<GlobalStyle>`, a `h1` tag and the
+`<Router>` component, all being sibling nodes.
+
+Now head back to your browser, you should notice that the fonts from the header and
+from the page title should match.
+
+![About page with global styles](/img/starting-reactgram/global-styles-component.png)
+
+Very exciting! Now we have some sort of framework around global styles and also around
+scoping styles to specific components we will build during this book. While simple,
+This setup should let us evolve our app with a lot of flexibility.
+
+:::caution
+
+While we will be writing some CSS along the book, the focus here isn't learning CSS,
+but React and how to build a somehow complex application.
+So don't expect that the CSS we will write along this book will be the most performant
+or flexible CSS you could ever write. Again, styling isn't the focus here.
+
+:::
+
+Our application now has a basic routing mechanism and also a styling setup. So lets
+now build a shared component that is always rendered across pages, no matter where we
+are in the app. I'll bet you can guess which part of the app we are talking about...
+Yes, that is right, the footer of Reactgram.
