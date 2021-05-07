@@ -3,3 +3,157 @@ sidebar_position: 3
 ---
 
 # Shared components with footer
+
+We have got our first static page up and running. We added some styles and things 
+are starting to look good. There is now one thing that pretty common in web apps
+which is a footer.
+
+There is usually this shared component that is shown across all pages, no matter
+where you are in the app. So lets go and built it.
+
+## Creating our footer component
+
+Lets start by creating a folder called `common` under `components`. with in it let's
+create a file called `Footer.js` with the following content:
+
+```jsx title="./src/components/common/Footer.js"
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+
+const FooterWrapper = styled.footer`
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    li {
+      display: inline-block;
+      margin: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      a {
+        color: #003569;
+        text-decoration: none;
+      }
+    }
+  }
+
+  span {
+    justify-self: end;
+  }
+
+  @media screen and (max-width: 900px) {
+    grid-template-columns: 1fr;
+    grid-gap: 30px;
+    align-items: center;
+    ul {
+      text-align: center;
+    }
+    span {
+      justify-self: center;
+    }
+  }
+`
+
+export const Footer = () => {
+  const currentYear = new Date().getFullYear()
+
+  return (
+    <FooterWrapper>
+      <ul>
+        <li>
+          <Link to='/about'>About</Link>
+        </li>
+        <li>
+          <Link to='/help'>Help</Link>
+        </li>
+        <li>
+          <Link to='/privacy'>Privacy</Link>
+        </li>
+        <li>
+          <a href="https://reactgram.dev/" 
+             target="_blank" 
+             rel="noreferrer">
+            Read the Book
+          </a>
+        </li>
+      </ul>
+      <span className="subtitle">
+        © {currentYear} Reactgram
+      </span>
+    </FooterWrapper>
+  )
+}
+```
+
+A few things to notice here:
+
+* We didn't import React anymore at the top of our component. Since React 17
+This isn't required anymore. It used to be required so the JSX transformer
+would know which file to parse.
+
+* We created a styled component called `FooterWrapper` which created a `footer`
+HTML tag when it's rendered. This is handy when we want to create a more complex
+component which can share its styles with its children. Notice the CSS we were
+which targets `ul`, `li` and `span` elements.
+
+* Within the `Footer` component, we added some new links to other static pages
+we will be creating soon.
+
+## Rendering child components
+
+Now lets go ahead and use this component on our `StaticLayout.js` component. For that
+we must do a little refactoring:
+
+```jsx title="./src/components/static/StaticLayout.js"
+import styled from 'styled-components'
+import { Footer } from '../common/Footer';
+
+const StaticLayoutWrapper = styled.div`
+    display: grid;
+    grid-template-rows: 1fr;
+    gap: 16px;
+    padding: 16px;
+    justify-items: center;
+    margin: auto;
+    max-width: 935px;
+    width: 100%;
+`;
+
+export const StaticLayout = ({ children }) => {
+  return(
+    <>
+      <StaticLayoutWrapper>
+        {children}
+      </StaticLayoutWrapper>
+      <Footer/>
+    </>
+  )
+}
+```
+
+Here we used the same approach we took with the `Footer` component, using
+a styled component as a wrapper and exporting the `StaticLayout` component
+as usual.
+
+There is one other thing we haven't seen yet:
+
+* We are now passing a `prop` called `children` and within `StaticLayoutWrapper`
+we are rendering it.
+
+This is actually how you can make components more flexible and composable. Whenever
+you need to render a nested component or HTML tag, you can accomplish via the `children`
+prop which is automatically injected by React for you.
+
+Now head back yo your browser. You should see something similar to this:
+
+![About page with footer](/img/starting-reactgram/about-page-footer.png)
+
+We now have a pretty decent footer that we can render across all pages of our app.
+We also have links to other static pages that don't work yet. Let's build our Help and
+Privacy pages in the next section.

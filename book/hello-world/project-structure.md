@@ -95,7 +95,3 @@ As you can see, this is just a simple HTML file. There is nothing special about 
 1. **%PUBLIC_URL%**: This is a template variable that will be replaced during build time with the absolute path of the `public`. This will ensure that all your assets can be served, independently of client-side routing.
 2. **div with id="root"**: This is the Application mounting point. Our React code will look for this div to mount the entire application within it. We will see the javascript code for that shortly.
 3. **There is no javascript tags**: As you can see, the `index.html` file doesn't contain any javascript tags or imports of any kind. The javascript tags will be injected at build time by `create-react-app`, so you don't have to think too much about it by default.
-
-## File changes we have made so far
-
-Here is the [Github link](https://github.com/brunojppb/reactgram-web/commit/398b6fc61a0a8951662a8ee24becfebe9d3e9df8) to the commit of the changes we have made so far.

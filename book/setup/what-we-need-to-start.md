@@ -48,5 +48,4 @@ I personally like to use [Visual Studio Code](https://code.visualstudio.com/), b
 
 ## Moving on  
 
-In the next steps, we will install all those dependencies mentioned above and get them up & running to create our **Reactgram** app.  
-To make things a little easier for you, I will also add a link to the commit of all changes we make along the way, so you can see all the file changes we made together during the following chapters.
+In the next steps, we will install all those dependencies mentioned above and get them up & running to create our **Reactgram** app.
