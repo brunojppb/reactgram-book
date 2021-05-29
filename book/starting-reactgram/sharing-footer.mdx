@@ -1,0 +1,221 @@
+---
+sidebar_position: 4
+---
+
+# Sharing components across pages
+
+In the previous section, we implemented our `Footer` component. We also rendered
+it within our `StaticLayout` component, which will enable us to share it across
+different pages. Lets see it practice now.
+
+## Creating our Help page
+
+Let's go ahead and create a file called `HelpPage.js` at `src/static` with the
+following content:
+
+```jsx title="./src/static/HelpPage.js"
+import { StaticLayout } from './StaticLayout';
+
+function HelpPage() {
+
+  return(
+    <StaticLayout>
+      <h1>Help Page</h1>
+      <p>
+        Reactgram is an app created while reading the <a href="https://reactgram.dev">reactgram book</a>
+        {' '}which doesn't provide any support. But feel free to ask questions via
+        our <a href="https://github.com/brunojppb/reactgram/issues">Github Issues page.</a>
+      </p>
+    </StaticLayout>
+  )
+
+}
+
+export default HelpPage;
+```
+
+We took a similar approach like we did for the `AboutPage` component, so there is
+probably nothing new here. But just creating the `HelpPage` component isn't enough
+to be able to see it in our app. We must create route for it.
+
+Now let's go ahead and edit `src/App.js` with the following content:
+
+```jsx title="./src/App.js" {4,18-20}
+import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
+import { GlobalStyle } from './components/GlobalStyles';
+import AboutPage from './components/static/AboutPage';
+import HelpPage from './components/static/HelpPage';
+
+function App() {
+
+  return (
+    <>
+      <GlobalStyle/>
+      <h1>Reactgram</h1>
+      <Router>
+        <Link to="/about">About</Link>
+        <Switch>
+          <Route path="/about">
+            <AboutPage/>
+          </Route>
+          <Route path="/help">
+            <HelpPage/>
+          </Route>
+        </Switch>
+      </Router>
+    </>
+  );
+}
+
+export default App;
+```
+
+Here we added a new route for our help page in the same way we did for our about
+page.
+
+Now head back to your browser and try the `help` link on the footer. It should
+show you the `HelpPage` component.
+
+## Sharing the footer across the entire App
+
+If you go back to the homepage at `localhost:3000`, you will notice that we don't
+render the footer there. This is because we are only rendering the footer within
+the `StaticLayout` component. Let's change this so we can show the footer across
+our whole app.
+
+Head back to `src/components/static/StaticLayout.js` and remove the references to
+the `Footer` component. Your code should look like this:
+
+```jsx title="./src/components/static/StaticLayout.js"
+import styled from 'styled-components'
+
+const StaticLayoutWrapper = styled.div`
+    display: grid;
+    grid-template-rows: 1fr;
+    gap: 16px;
+    padding: 16px;
+    justify-items: center;
+    margin: auto;
+    max-width: 935px;
+    width: 100%;
+`;
+
+export const StaticLayout = ({ children }) => {
+  return(
+    <>
+      <StaticLayoutWrapper>
+        {children}
+      </StaticLayoutWrapper>
+    </>
+  )
+}
+```
+
+Now we need to place the `Footer` component in our `App` component so it will
+render the footer across all pages. Remember that the `App` component works as
+the main container for our app, which will always be rendered across all pages
+at all times.
+
+Notice that we also have a `Link` to the about page in our `App`. We don't need
+that anymore because our `Footer` component already includes a link to the about
+page. So we can also delete that.
+
+Head back to `src/App.js` and render the `Footer` within the `Router` component.
+
+```jsx title="./src/App.js" {2,22}
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { Footer } from './components/common/Footer';
+import { GlobalStyle } from './components/GlobalStyles';
+import AboutPage from './components/static/AboutPage';
+import HelpPage from './components/static/HelpPage';
+
+function App() {
+
+  return (
+    <>
+      <GlobalStyle/>
+      <h1>Reactgram</h1>
+      <Router>
+        <Switch>
+          <Route path="/about">
+            <AboutPage/>
+          </Route>
+          <Route path="/help">
+            <HelpPage/>
+          </Route>
+        </Switch>
+        <Footer/>
+      </Router>
+    </>
+  );
+}
+
+export default App;
+```
+
+Now head back to your browser and open `localhost:3000`. You should see a very
+empty homepage. It includes the app name and the footer, but bear with me, we will
+add a more interesting homepage soon.
+
+Now try to click on the `about` and `help` links. You should see the content switching
+just like normal web pages do. 
+
+![Switching Links on footer](/img/starting-reactgram/switching-pages-footer.gif)
+
+## Adding the Privacy Page
+
+To add the privacy page, you have to follow the exact same steps we took for adding the
+help page. I will leave the page component code here as reference and will leave
+the privacy page for you do add by yourself as an exercise.
+
+``` jsx title="./src/components/static/PrivacyPage.js"
+import { StaticLayout } from './StaticLayout';
+
+function PrivacyPage() {
+
+  return(
+    <StaticLayout>
+      <h1>Privacy Page</h1>
+      <p>
+        At Reactgram, accessible from https://reactgram.dev, one of our main
+        priorities is the privacy of our visitors. This Privacy Policy document
+        contains types of information that is collected and recorded by
+        Reactgram and how we use it.
+      </p>
+
+      <h2>Data Collection</h2>
+      <p>
+        This is an app created for educational purpose only and we do not collect
+        any personal data.
+      </p>
+
+      <h2>Consent</h2>
+
+      <p>
+        By using our website, you hereby consent to our Privacy Policy and agree
+        to its Terms and Conditions.
+      </p>
+    </StaticLayout>
+  )
+
+}
+
+export default PrivacyPage;
+```
+
+And here is how it should look like once you finish this exercise and visit `localhost:3000/privacy`
+
+![Privacy Page](/img/starting-reactgram/privacy-page.jpg)
+
+## Wrapping up
+
+In the previous sections we manage to create several pages using React components.
+We also saw how we can compose components together by rendering bigger components like
+the `StaticLayout` component and reusing it across several pages.
+
+We also saw how to create routes in our app for static pages and how to use
+`styled-components` to write CSS directly into our JS files, enabling us to create
+wrapper components with custom styles.
+
+In the next section, we will start building our user registration flow and during
+that moment we will explore form elements and how they work in React.
